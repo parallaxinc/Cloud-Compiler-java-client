@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.parallax.client.cloudcompiler;
+package com.parallax.client.cloudcompiler.objects;
 
 /**
  *
  * @author Michel
  */
-public class CloudCompileService {
+public enum CompileAction {
+
+    COMPILE, BIN, EEPROM
 
 }
