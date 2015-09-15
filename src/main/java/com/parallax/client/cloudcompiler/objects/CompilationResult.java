@@ -11,9 +11,27 @@ package com.parallax.client.cloudcompiler.objects;
  */
 public class CompilationResult {
 
+    private boolean success;
+
     private String compilerOutput;
     private String compilerError;
     private String binary;
+    private String extension;
+
+    public CompilationResult() {
+    }
+
+    public CompilationResult(boolean success) {
+        this.success = success;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
 
     public String getCompilerOutput() {
         return compilerOutput;
@@ -37,6 +55,14 @@ public class CompilationResult {
 
     public void setBinary(String binary) {
         this.binary = binary;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
     }
 
 }

@@ -17,11 +17,11 @@ import com.parallax.client.cloudcompiler.objects.CompileAction;
  *
  * @author Michel
  */
-public class SpinCloudCompileService {
+public class CCloudCompileService {
 
     private final String BASE_URL;
 
-    public SpinCloudCompileService(String baseUrl) {
+    public CCloudCompileService(String baseUrl) {
         this.BASE_URL = baseUrl;
     }
 
@@ -29,8 +29,8 @@ public class SpinCloudCompileService {
         return BASE_URL + actionUrl;
     }
 
-    public CompilationResult compileSingleSpin(CompileAction action, String spinCode) throws CompilationException {
-        HttpRequest request = HttpRequest.post(getUrl("/single/spin/" + action.name())).send(spinCode);
+    public CompilationResult compileSingleC(CompileAction action, String cCode) throws CompilationException {
+        HttpRequest request = HttpRequest.post(getUrl("/single/prop-c/" + action.name())).send(cCode);
         return handleResponse(action, request);
     }
 
