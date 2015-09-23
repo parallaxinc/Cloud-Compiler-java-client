@@ -30,7 +30,7 @@ public class CCloudCompileService {
     }
 
     public CompilationResult compileSingleC(CompileAction action, String cCode) throws CompilationException {
-        HttpRequest request = HttpRequest.post(getUrl("/single/prop-c/" + action.name())).send(cCode);
+        HttpRequest request = HttpRequest.post(getUrl("/single/prop-c/" + action.name())).contentType("text/plain").send(cCode);
         return handleResponse(action, request);
     }
 

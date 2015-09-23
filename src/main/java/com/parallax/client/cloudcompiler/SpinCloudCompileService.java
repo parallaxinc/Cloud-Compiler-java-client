@@ -30,7 +30,7 @@ public class SpinCloudCompileService {
     }
 
     public CompilationResult compileSingleSpin(CompileAction action, String spinCode) throws CompilationException {
-        HttpRequest request = HttpRequest.post(getUrl("/single/spin/" + action.name())).send(spinCode);
+        HttpRequest request = HttpRequest.post(getUrl("/single/spin/" + action.name())).contentType("text/plain").send(spinCode);
         return handleResponse(action, request);
     }
 
