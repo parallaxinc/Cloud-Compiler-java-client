@@ -9,6 +9,7 @@ import com.github.kevinsawicki.http.HttpRequest;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.parallax.client.cloudcompiler.exceptions.ServerException;
 import com.parallax.client.cloudcompiler.objects.CompilationException;
 import com.parallax.client.cloudcompiler.objects.CompilationResult;
@@ -40,49 +41,47 @@ public class CCloudCompileService {
         } catch (HttpRequest.HttpRequestException hre) {
             LOG.error("Inter service error", hre);
             throw new ServerException(hre);
+        } catch (JsonSyntaxException jse) {
+            LOG.error("Json syntace service error", jse);
+            throw new ServerException(jse);
         }
     }
 
     protected CompilationResult handleResponse(CompileAction action, HttpRequest request) throws CompilationException, ServerException {
-        try {
-            String response = request.body();
-            JsonElement jelement = new JsonParser().parse(response);
-            JsonObject responseObject = jelement.getAsJsonObject();
+        String response = request.body();
+        JsonElement jelement = new JsonParser().parse(response);
+        JsonObject responseObject = jelement.getAsJsonObject();
 
-            int code = request.code();
-            if (code == 200) {
-                String compilerOut = responseObject.get("compiler-output").getAsString();
-                String compilerErr = responseObject.get("compiler-error").getAsString();
+        int code = request.code();
+        if (code == 200) {
+            String compilerOut = responseObject.get("compiler-output").getAsString();
+            String compilerErr = responseObject.get("compiler-error").getAsString();
 
-                if (responseObject.get("success").getAsBoolean()) {
+            if (responseObject.get("success").getAsBoolean()) {
 
-                    CompilationResult result = new CompilationResult(true);
-                    result.setCompilerOutput(compilerOut);
-                    result.setCompilerError(compilerErr);
+                CompilationResult result = new CompilationResult(true);
+                result.setCompilerOutput(compilerOut);
+                result.setCompilerError(compilerErr);
 
-                    if (action != CompileAction.COMPILE) {
-                        result.setBinary(responseObject.get("binary").getAsString());
-                        result.setExtension(responseObject.get("extension").getAsString());
-                    }
-
-                    return result;
-                } else {
-                    CompilationResult result = new CompilationResult(false);
-                    result.setCompilerOutput(compilerOut);
-                    result.setCompilerError(compilerErr);
-
-                    return result;
+                if (action != CompileAction.COMPILE) {
+                    result.setBinary(responseObject.get("binary").getAsString());
+                    result.setExtension(responseObject.get("extension").getAsString());
                 }
-            } else if (code == 400) {
-                String message = responseObject.get("message").getAsString();
-                throw new CompilationException(message);
 
+                return result;
+            } else {
+                CompilationResult result = new CompilationResult(false);
+                result.setCompilerOutput(compilerOut);
+                result.setCompilerError(compilerErr);
+
+                return result;
             }
-            return null;
-        } catch (HttpRequest.HttpRequestException hre) {
-            LOG.error("Inter service error", hre);
-            throw new ServerException(hre);
+        } else if (code == 400) {
+            String message = responseObject.get("message").getAsString();
+            throw new CompilationException(message);
+
         }
+        return null;
     }
 
 }
